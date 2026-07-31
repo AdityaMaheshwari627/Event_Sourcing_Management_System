@@ -6,6 +6,7 @@ const connectDB = require("./src/config/db");
 
 // Connect Database
 connectDB();
+console.log("JWT Secret:", process.env.JWT_SECRET);
 
 // Port
 const PORT = process.env.PORT || 5000;
