@@ -3,19 +3,43 @@ const Account = require("../models/Account");
 const Event = require("../models/Event");
 const EVENT_TYPES = require("../constants/eventTypes");
 
-
 // ======================================
 // Get Next Event Version
 // ======================================
 
 const getNextVersion = async (aggregateId, session) => {
-  const lastEvent = await Event.findOne({
-    aggregateId,
-  })
+  const lastEvent = await Event.findOne({ aggregateId })
     .sort({ version: -1 })
     .session(session);
 
   return lastEvent ? lastEvent.version + 1 : 1;
+};
+
+// ======================================
+// Get All Accounts
+// ======================================
+
+const getAccounts = async (userId) => {
+  return await Account.find({ user: userId }).sort({
+    createdAt: -1,
+  });
+};
+
+// ======================================
+// Get Single Account
+// ======================================
+
+const getAccountById = async (accountId, userId) => {
+  const account = await Account.findOne({
+    _id: accountId,
+    user: userId,
+  });
+
+  if (!account) {
+    throw new Error("Account Not Found");
+  }
+
+  return account;
 };
 
 // ======================================
@@ -73,7 +97,7 @@ const createAccount = async (userId, accountType = "Saving") => {
 };
 
 // ======================================
-// Deposit Money
+// Deposit
 // ======================================
 
 const depositMoney = async (accountId, amount) => {
@@ -126,8 +150,9 @@ const depositMoney = async (accountId, amount) => {
     session.endSession();
   }
 };
+
 // ======================================
-// Withdraw Money
+// Withdraw
 // ======================================
 
 const withdrawMoney = async (accountId, amount) => {
@@ -184,7 +209,6 @@ const withdrawMoney = async (accountId, amount) => {
     session.endSession();
   }
 };
-
 // ======================================
 // Transfer Money
 // ======================================
@@ -245,7 +269,8 @@ const transferMoney = async (senderId, receiverId, amount) => {
       receiver._id,
       session
     );
-        await Event.create(
+
+    await Event.create(
       [
         {
           aggregateId: receiver._id,
@@ -270,11 +295,16 @@ const transferMoney = async (senderId, receiverId, amount) => {
       sender,
       receiver,
     };
+
   } catch (error) {
+
     await session.abortTransaction();
     throw error;
+
   } finally {
+
     session.endSession();
+
   }
 };
 
@@ -287,4 +317,6 @@ module.exports = {
   depositMoney,
   withdrawMoney,
   transferMoney,
+  getAccounts,
+  getAccountById,
 };

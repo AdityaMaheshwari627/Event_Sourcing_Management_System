@@ -9,14 +9,36 @@ const checkAccountOwnership = require("../middleware/ownershipMiddleware");
 
 const {
   createAccount,
+  getAccounts,
+  getAccountById,
   depositMoney,
   withdrawMoney,
   transferMoney,
 } = require("../controllers/accountController");
 
-// =========================
+// ======================================
+// Get All Accounts
+// ======================================
+
+router.get(
+  "/",
+  protect,
+  getAccounts
+);
+
+// ======================================
+// Get Single Account
+// ======================================
+
+router.get(
+  "/:id",
+  protect,
+  getAccountById
+);
+
+// ======================================
 // Create Account
-// =========================
+// ======================================
 
 router.post(
   "/create",
@@ -28,9 +50,9 @@ router.post(
   createAccount
 );
 
-// =========================
-// Deposit
-// =========================
+// ======================================
+// Deposit Money
+// ======================================
 
 router.post(
   "/deposit",
@@ -42,9 +64,9 @@ router.post(
   depositMoney
 );
 
-// =========================
-// Withdraw
-// =========================
+// ======================================
+// Withdraw Money
+// ======================================
 
 router.post(
   "/withdraw",
@@ -56,9 +78,9 @@ router.post(
   withdrawMoney
 );
 
-// =========================
-// Transfer
-// =========================
+// ======================================
+// Transfer Money
+// ======================================
 
 router.post(
   "/transfer",

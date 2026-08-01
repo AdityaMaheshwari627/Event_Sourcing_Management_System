@@ -4,6 +4,7 @@ const accountService = require("../services/accountService");
 // ======================================
 // Create Account
 // ======================================
+
 const createAccount = asyncHandler(async (req, res) => {
   const { accountType } = req.body;
 
@@ -20,8 +21,45 @@ const createAccount = asyncHandler(async (req, res) => {
 });
 
 // ======================================
+// Get All Accounts
+// ======================================
+
+const getAccounts = asyncHandler(async (req, res) => {
+
+  const accounts = await accountService.getAccounts(
+    req.user.id
+  );
+
+  res.status(200).json({
+    success: true,
+    accounts,
+  });
+
+});
+
+// ======================================
+// Get Single Account
+// ======================================
+
+const getAccountById = asyncHandler(async (req, res) => {
+
+  const account =
+    await accountService.getAccountById(
+      req.params.id,
+      req.user.id
+    );
+
+  res.status(200).json({
+    success: true,
+    account,
+  });
+
+});
+
+// ======================================
 // Deposit Money
 // ======================================
+
 const depositMoney = asyncHandler(async (req, res) => {
   const { accountId, amount } = req.body;
 
@@ -40,6 +78,7 @@ const depositMoney = asyncHandler(async (req, res) => {
 // ======================================
 // Withdraw Money
 // ======================================
+
 const withdrawMoney = asyncHandler(async (req, res) => {
   const { accountId, amount } = req.body;
 
@@ -58,6 +97,7 @@ const withdrawMoney = asyncHandler(async (req, res) => {
 // ======================================
 // Transfer Money
 // ======================================
+
 const transferMoney = asyncHandler(async (req, res) => {
   const { senderId, receiverId, amount } = req.body;
 
@@ -77,6 +117,8 @@ const transferMoney = asyncHandler(async (req, res) => {
 
 module.exports = {
   createAccount,
+  getAccounts,
+  getAccountById,
   depositMoney,
   withdrawMoney,
   transferMoney,

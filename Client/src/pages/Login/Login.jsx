@@ -6,50 +6,71 @@ import { loginUser } from "../../services/authService";
 function Login() {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setLoading(true);
+
       const data = await loginUser(formData);
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      toast.success("Login Successful");
+      toast.success(data.message || "Login Successful");
 
       navigate("/dashboard");
+
     } catch (error) {
+
       toast.error(
         error.response?.data?.message || "Login Failed"
       );
+
+    } finally {
+
+      setLoading(false);
+
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-[420px]">
-        <h1 className="text-4xl font-bold text-center text-blue-600">
+
+      <div className="w-[420px] rounded-2xl bg-white p-8 shadow-xl">
+
+        <h1 className="text-center text-4xl font-bold text-blue-600">
           Welcome Back
         </h1>
 
-        <p className="text-center text-gray-500 mt-2 mb-6">
-          Login to your Event Source Bank Account
+        <p className="mt-2 mb-6 text-center text-gray-500">
+          Login to your Event Source Banking Account
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5"
+        >
+
           <div>
-            <label className="font-semibold">Email</label>
+
+            <label className="font-semibold">
+              Email
+            </label>
 
             <input
               type="email"
@@ -57,13 +78,17 @@ function Login() {
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full mt-2 border rounded-lg px-4 py-2 outline-none focus:border-blue-500"
               required
+              className="mt-2 w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-600"
             />
+
           </div>
 
           <div>
-            <label className="font-semibold">Password</label>
+
+            <label className="font-semibold">
+              Password
+            </label>
 
             <input
               type="password"
@@ -71,29 +96,37 @@ function Login() {
               placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full mt-2 border rounded-lg px-4 py-2 outline-none focus:border-blue-500"
               required
+              className="mt-2 w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-600"
             />
+
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            disabled={loading}
+            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
           >
-            Login
+            {loading ? "Logging In..." : "Login"}
           </button>
+
         </form>
 
-        <p className="text-center mt-5">
+        <p className="mt-6 text-center">
+
           Don't have an account?{" "}
+
           <Link
             to="/register"
-            className="text-blue-600 font-semibold hover:underline"
+            className="font-semibold text-blue-600 hover:underline"
           >
             Register
           </Link>
+
         </p>
+
       </div>
+
     </div>
   );
 }
