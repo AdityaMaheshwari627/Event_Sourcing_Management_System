@@ -1,4 +1,5 @@
 const replayService = require("../services/replayService");
+const accountService = require("../services/accountService");
 
 // ======================================
 // Replay Account State
@@ -7,6 +8,8 @@ const replayAccount = async (req, res) => {
   try {
 
     const { accountId } = req.params;
+
+    await accountService.getAccountById(accountId, req.user.id);
 
     const accountState = await replayService.replayAccount(accountId);
 

@@ -4,7 +4,7 @@ import api from "./api";
 // Get All Accounts
 // =========================
 export const getAccounts = async () => {
-  const { data } = await api.get("/accounts");
+  const { data } = await api.get("/account");
 
   return data;
 };
@@ -13,9 +13,7 @@ export const getAccounts = async () => {
 // Create Account
 // =========================
 export const createAccount = async (accountType) => {
-  const { data } = await api.post("/accounts/create", {
-    accountType,
-  });
+  const { data } = await api.post("/account/create", { accountType });
 
   return data;
 };
@@ -24,7 +22,7 @@ export const createAccount = async (accountType) => {
 // Deposit Money
 // =========================
 export const depositMoney = async (payload) => {
-  const { data } = await api.post("/accounts/deposit", payload);
+  const { data } = await api.post("/account/deposit", payload);
 
   return data;
 };
@@ -33,7 +31,7 @@ export const depositMoney = async (payload) => {
 // Withdraw Money
 // =========================
 export const withdrawMoney = async (payload) => {
-  const { data } = await api.post("/accounts/withdraw", payload);
+  const { data } = await api.post("/account/withdraw", payload);
 
   return data;
 };
@@ -42,7 +40,12 @@ export const withdrawMoney = async (payload) => {
 // Transfer Money
 // =========================
 export const transferMoney = async (payload) => {
-  const { data } = await api.post("/accounts/transfer", payload);
+  const { data } = await api.post("/account/transfer", payload);
 
+  return data;
+};
+
+export const getEvents = async () => {
+  const { data } = await api.get("/account/events");
   return data;
 };

@@ -38,9 +38,7 @@ function Accounts() {
 
       if (!accountType) return;
 
-      const res = await createAccount({
-        accountType,
-      });
+      const res = await createAccount(accountType.trim());
 
       toast.success(res.message);
 

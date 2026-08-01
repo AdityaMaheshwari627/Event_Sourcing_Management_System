@@ -4,8 +4,17 @@ import {
   FaMoon,
   FaUserCircle,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../services/authService";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const logout = () => {
+    logoutUser();
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
   return (
     <header className="h-20 bg-[#0F172A] border-b border-slate-800 px-8 flex items-center justify-between">
 
@@ -32,14 +41,14 @@ function Navbar() {
           <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
 
-        <div className="flex items-center gap-3">
+        <button onClick={logout} title="Logout" className="flex items-center gap-3 text-left">
 
           <FaUserCircle className="text-5xl text-blue-500" />
 
           <div>
 
             <h3 className="text-white font-bold">
-              Aditya
+              {user.name || "Customer"}
             </h3>
 
             <p className="text-gray-400 text-sm">
@@ -48,7 +57,7 @@ function Navbar() {
 
           </div>
 
-        </div>
+        </button>
 
       </div>
 

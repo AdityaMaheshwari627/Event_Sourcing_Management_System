@@ -11,6 +11,8 @@ const {
   createAccount,
   getAccounts,
   getAccountById,
+  getAccountEvents,
+  getUserEvents,
   depositMoney,
   withdrawMoney,
   transferMoney,
@@ -30,10 +32,18 @@ router.get(
 // Get Single Account
 // ======================================
 
+router.get("/events", protect, getUserEvents);
+
 router.get(
   "/:id",
   protect,
   getAccountById
+);
+
+router.get(
+  "/:id/events",
+  protect,
+  getAccountEvents
 );
 
 // ======================================

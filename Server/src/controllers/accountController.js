@@ -1,5 +1,6 @@
 const asyncHandler = require("../middleware/asyncHandler");
 const accountService = require("../services/accountService");
+const Event = require("../models/Event");
 
 // ======================================
 // Create Account
@@ -54,6 +55,24 @@ const getAccountById = asyncHandler(async (req, res) => {
     account,
   });
 
+});
+
+const getAccountEvents = asyncHandler(async (req, res) => {
+  await accountService.getAccountById(req.params.id, req.user.id);
+
+  const events = await Event.find({ aggregateId: req.params.id })
+    .sort({ version: -1, createdAt: -1 });
+
+  res.status(200).json({ success: true, events });
+});
+
+const getUserEvents = asyncHandler(async (req, res) => {
+  const accounts = await accountService.getAccounts(req.user.id);
+  const events = await Event.find({
+    aggregateId: { $in: accounts.map((account) => account._id) },
+  }).sort({ createdAt: -1 });
+
+  res.status(200).json({ success: true, events });
 });
 
 // ======================================
@@ -119,6 +138,8 @@ module.exports = {
   createAccount,
   getAccounts,
   getAccountById,
+  getAccountEvents,
+  getUserEvents,
   depositMoney,
   withdrawMoney,
   transferMoney,

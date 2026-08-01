@@ -1,108 +1,21 @@
+import { useEffect, useState } from "react";
 import DashboardLayout from "../../layouts/DashboardLayout";
-
-const transactions = [
-  {
-    id: 1,
-    type: "Deposit",
-    amount: "₹25,000",
-    account: "Savings",
-    status: "Success",
-    date: "01 Aug 2026",
-  },
-  {
-    id: 2,
-    type: "Withdraw",
-    amount: "₹5,000",
-    account: "Savings",
-    status: "Success",
-    date: "31 Jul 2026",
-  },
-  {
-    id: 3,
-    type: "Transfer",
-    amount: "₹8,700",
-    account: "Current",
-    status: "Pending",
-    date: "31 Jul 2026",
-  },
-  {
-    id: 4,
-    type: "Deposit",
-    amount: "₹60,000",
-    account: "Salary",
-    status: "Success",
-    date: "30 Jul 2026",
-  },
-];
+import { getEvents } from "../../services/accountService";
+import toast from "react-hot-toast";
 
 function Transactions() {
-  return (
-    <DashboardLayout>
-
-      <h1 className="text-4xl font-bold text-white mb-8">
-        Transactions
-      </h1>
-
-      <div className="bg-[#111827] rounded-3xl p-6">
-
-        <table className="w-full text-white">
-
-          <thead>
-
-            <tr className="border-b border-gray-700">
-
-              <th className="text-left py-4">ID</th>
-              <th className="text-left">Type</th>
-              <th className="text-left">Amount</th>
-              <th className="text-left">Account</th>
-              <th className="text-left">Date</th>
-              <th className="text-left">Status</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            {transactions.map((item) => (
-
-              <tr
-                key={item.id}
-                className="border-b border-gray-800 hover:bg-gray-900 transition"
-              >
-
-                <td className="py-5">{item.id}</td>
-                <td>{item.type}</td>
-                <td>{item.amount}</td>
-                <td>{item.account}</td>
-                <td>{item.date}</td>
-
-                <td>
-
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm ${
-                      item.status === "Success"
-                        ? "bg-green-600"
-                        : "bg-yellow-500"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-
-                </td>
-
-              </tr>
-
-            ))}
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </DashboardLayout>
-  );
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getEvents().then(({ events }) => setEvents(events || [])).catch((error) => toast.error(error.response?.data?.message || "Unable to load transactions")).finally(() => setLoading(false));
+  }, []);
+  return <DashboardLayout>
+    <h1 className="text-4xl font-bold text-white mb-8">Transactions</h1>
+    <div className="bg-[#111827] rounded-3xl p-6 overflow-x-auto">
+      {loading ? <p className="text-white">Loading...</p> : <table className="w-full text-white"><thead><tr className="border-b border-gray-700"><th className="py-4 text-left">Type</th><th className="text-left">Amount</th><th className="text-left">Balance</th><th className="text-left">Date</th></tr></thead>
+      <tbody>{events.map((event) => <tr key={event._id} className="border-b border-gray-800"><td className="py-5">{event.eventType.replaceAll("_", " ")}</td><td>₹ {event.payload.amount ?? "—"}</td><td>₹ {event.payload.newBalance ?? event.payload.balance ?? 0}</td><td>{new Date(event.createdAt).toLocaleString()}</td></tr>)}</tbody></table>}
+      {!loading && !events.length && <p className="text-gray-400">No transactions yet. Create an account and make a deposit to begin.</p>}
+    </div>
+  </DashboardLayout>;
 }
-
 export default Transactions;
