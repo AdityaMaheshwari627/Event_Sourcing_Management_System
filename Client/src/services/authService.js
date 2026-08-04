@@ -9,12 +9,20 @@ export const loginUser = async (userData) => {
   const response = await API.post("/auth/login", userData);
 
   if (response.data.token) {
-    localStorage.setItem("token", response.data.token);
+    sessionStorage.setItem("token", response.data.token);
+
+    if (response.data.user) {
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      );
+    }
   }
 
   return response.data;
 };
 
 export const logoutUser = () => {
-  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
+  sessionStorage.removeItem("user");
 };
