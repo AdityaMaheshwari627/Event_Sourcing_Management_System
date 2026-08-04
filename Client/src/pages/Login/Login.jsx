@@ -28,23 +28,20 @@ function Login() {
 
       const data = await loginUser(formData);
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // Save login session
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("user", JSON.stringify(data.user));
 
       toast.success(data.message || "Login Successful");
 
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
 
     } catch (error) {
-
       toast.error(
         error.response?.data?.message || "Login Failed"
       );
-
     } finally {
-
       setLoading(false);
-
     }
   };
 
@@ -61,16 +58,10 @@ function Login() {
           Login to your Event Source Banking Account
         </p>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5">
 
           <div>
-
-            <label className="font-semibold">
-              Email
-            </label>
+            <label className="font-semibold">Email</label>
 
             <input
               type="email"
@@ -81,14 +72,10 @@ function Login() {
               required
               className="mt-2 w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-600"
             />
-
           </div>
 
           <div>
-
-            <label className="font-semibold">
-              Password
-            </label>
+            <label className="font-semibold">Password</label>
 
             <input
               type="password"
@@ -99,7 +86,6 @@ function Login() {
               required
               className="mt-2 w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-600"
             />
-
           </div>
 
           <button
@@ -113,16 +99,13 @@ function Login() {
         </form>
 
         <p className="mt-6 text-center">
-
           Don't have an account?{" "}
-
           <Link
             to="/register"
             className="font-semibold text-blue-600 hover:underline"
           >
             Register
           </Link>
-
         </p>
 
       </div>

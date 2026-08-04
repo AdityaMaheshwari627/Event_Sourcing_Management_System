@@ -1,9 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
-
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Transactions from "../pages/Transactions/Transactions";
 import Accounts from "../pages/Accounts/Accounts";
@@ -15,11 +13,11 @@ import Passbook from "../pages/Passbook/Passbook";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 
-function AppRoutes() {
+export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
 
-      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
@@ -95,10 +93,7 @@ function AppRoutes() {
         }
       />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
-
-export default AppRoutes;
