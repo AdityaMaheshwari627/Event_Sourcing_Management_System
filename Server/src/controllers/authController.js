@@ -70,17 +70,25 @@ const loginUser = async (req, res) => {
 
     const user = await User.findOne({ email });
 
+    console.log("====================================");
+    console.log("User Found:", user);
+
     if (!user) {
+      console.log("User not found");
+
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
 
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+    console.log("Entered Password :", password);
+    console.log("Stored Hash      :", user.password);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    console.log("Password Match :", isMatch);
+    console.log("====================================");
 
     if (!isMatch) {
       return res.status(401).json({
