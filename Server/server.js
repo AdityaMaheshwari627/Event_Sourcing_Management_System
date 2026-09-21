@@ -7,8 +7,8 @@ const connectDB = require("./src/config/db");
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
-  if (!process.env.MONGO_URI || !process.env.JWT_SECRET) {
-    throw new Error("MONGO_URI and JWT_SECRET must be configured");
+  if (!process.env.MONGO_URI || !process.env.MONGO_DB_NAME || !process.env.JWT_SECRET) {
+    throw new Error("MONGO_URI, MONGO_DB_NAME, and JWT_SECRET must be configured");
   }
 
   await connectDB();

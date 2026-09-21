@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  // A relative URL works when a reverse proxy serves the client and API together.
+  // Set VITE_API_URL when the frontend and backend are deployed separately.
+  baseURL: import.meta.env.VITE_API_URL || "/api",
 });
 
 API.interceptors.request.use((config) => {
