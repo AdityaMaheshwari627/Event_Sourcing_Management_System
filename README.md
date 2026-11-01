@@ -1,1 +1,1 @@
-# Event Sourcing Management System .
+# Event Sourcing Management System
