@@ -57,7 +57,7 @@ While working on this project, I got practical experience with:
 - Improve transaction consistency and error handling.
 - Add automated unit and integration tests.
 - Improve the frontend and dashboard.
-- Add better monitoring and logging.
+- Add better monitoring and logging..
 
 ## Conclusion
 
